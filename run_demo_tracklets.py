@@ -55,6 +55,10 @@ def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: s
   T_IMG_LIDAR = np.matmul(T_IMG_CAM, T_CAM_LIDAR)
 
   img = cv2.imread(image_path)
+
+  # BGR to RGB
+  img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
   img_h, img_w = img.shape[:2]
 
   # Add each cuboid to image
