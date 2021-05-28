@@ -4,6 +4,7 @@ import socket
 import numpy as np
 import load_calibration
 
+from typing import Tuple
 from pathlib import Path
 from matplotlib import pyplot as plt
 from scipy.spatial.transform import Rotation as R
@@ -16,7 +17,7 @@ COLORMAP = {'Car': GREEN,
 
 
 def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: str=None,
-                  plot_center: bool=True, plot_partly: bool=False):
+                  plot_center: bool=True, plot_partly: bool=False) -> Tuple[np.ndarray, str]:
 
   if base_dir:
 
@@ -35,7 +36,6 @@ def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: s
       BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD/{date}')
 
   image_path = str(BASE / sequence / "labeled" / f"image_0{camera}" / "data" / f"{format(frame, '010')}.png")
-  lidar_path = str(BASE / sequence / "labeled" / "lidar_points" / "data" / f"{format(frame, '010')}.bin")
   calib_path = str(BASE / "calib")
 
   annotations_file = BASE / sequence / "3d_ann.json"
@@ -52,7 +52,6 @@ def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: s
   T_IMG_CAM = T_IMG_CAM[0:3, :]                                                                 # remove last row
 
   T_CAM_LIDAR = np.linalg.inv(np.array(calib['extrinsics']['T_LIDAR_CAM0' + camera]))
-  T_IMG_LIDAR = np.matmul(T_IMG_CAM, T_CAM_LIDAR)
 
   img = cv2.imread(image_path)
 
