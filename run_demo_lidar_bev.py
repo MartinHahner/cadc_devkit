@@ -22,7 +22,7 @@ DISPLAY_CUBOID_CENTER = False
 MIN_CUBOID_DIST = 40.0
 
 
-def bev(date: str, sequence: str, frame: int, left: int=30, right: int=30, front: int=20, back: int=20, linesize: int=5,
+def bev(date: str, sequence: str, frame: int, left: int=60, right: int=60, front: int=40, back: int=40, linesize: int=5,
         base_dir: str=None, dpi: int=20, plot_center: bool=False, plot_partly: bool=False, use_intensity: bool=False) \
         -> Tuple[plt.Figure, str]:
 
