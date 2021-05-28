@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, wget, zipfile
+import os, wget, zipfile
 from pathlib import Path
 
 cadcd = {
@@ -24,27 +24,22 @@ cadcd = {
     ]
 }
 
-dataset_path=''
+dataset_path='/scratch_net/beast_second/mhahner/datasets'
+os.chdir(dataset_path)
 
-if len(sys.argv) == 2:
-    dataset_path = sys.argv[1]
-    os.chdir(dataset_path)
-else:
-    print('Please enter the path to store the dataset.')
-    exit()
+labeled = False
 
-labeled = True
 if labeled:
     print('Downloading labeled data')
 else:
     print('Downloading raw data')
 
 def main():
-    root_dir = Path(dataset_path + '/cadcd')
+    root_dir = Path(dataset_path + '/CADCD')
     root_dir.mkdir(parents=True, exist_ok=True)
     for date in cadcd:
         print(date)
-        date_path = dataset_path + '/cadcd/' + date
+        date_path = dataset_path + '/CADCD/' + date
         date_dir = Path(date_path)
         date_dir.mkdir(parents=True, exist_ok=True)
 
@@ -61,7 +56,7 @@ def main():
 
         for drive in cadcd[date]:
             print(drive)
-            drive_path = dataset_path + '/cadcd/' + date + '/' + drive
+            drive_path = dataset_path + '/CADCD/' + date + '/' + drive
             drive_dir = Path(drive_path)
             drive_dir.mkdir(parents=True, exist_ok=True)
 
