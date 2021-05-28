@@ -22,8 +22,9 @@ DISPLAY_CUBOID_CENTER = False
 MIN_CUBOID_DIST = 40.0
 
 
-def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front: int=50, back: int=50,
-        base_dir: str=None, dpi: int=25, plot_center: bool=False, use_intensity: bool=False) -> Tuple[plt.Figure, str]:
+def bev(date: str, sequence: str, frame: int, left: int=30, right: int=30, front: int=20, back: int=20, linesize: int=5,
+        base_dir: str=None, dpi: int=20, plot_center: bool=False, plot_partly: bool=False, use_intensity: bool=False) \
+        -> Tuple[plt.Figure, str]:
 
     if base_dir:
 
@@ -132,55 +133,55 @@ def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front
         T_Lidar_Cuboid[2][3] = cuboid['position']['z']
 
         # make sure the cuboid is within the range we want to see
-        if fwd_range[0] < cuboid['position']['x'] < fwd_range[1] \
-                and side_range[0] < cuboid['position']['y'] < side_range[1]:
+        if not plot_partly and ((not fwd_range[0] < cuboid['position']['x'] < fwd_range[1]) or
+                                (not side_range[0] < cuboid['position']['y'] < side_range[1])):
+            continue
 
-                x_trunc.append(cuboid['position']['x'])
-                y_trunc.append(cuboid['position']['y'])
+        x_trunc.append(cuboid['position']['x'])
+        y_trunc.append(cuboid['position']['y'])
 
-                width = cuboid['dimensions']['x']
-                length = cuboid['dimensions']['y']
-                height = cuboid['dimensions']['z']
+        width = cuboid['dimensions']['x']
+        length = cuboid['dimensions']['y']
+        height = cuboid['dimensions']['z']
 
-                label = cuboid['label']
-                color = COLORMAP.get(label, BLUE)
-                colors.append(color)
+        label = cuboid['label']
+        color = COLORMAP.get(label, BLUE)
+        colors.append(color)
 
-                # the top view of the tracklet in the "cuboid frame". The cuboid frame is a cuboid with origin (0, 0, 0)
-                # we are making a cuboid that has the dimensions of the tracklet but is located at the origin
-                front_top_right = np.array(
-                    [[1, 0, 0, length / 2], [0, 1, 0, width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
+        # the top view of the tracklet in the "cuboid frame". The cuboid frame is a cuboid with origin (0, 0, 0)
+        # we are making a cuboid that has the dimensions of the tracklet but is located at the origin
+        front_top_right = np.array(
+            [[1, 0, 0, length / 2], [0, 1, 0, width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
 
-                front_top_left = np.array(
-                    [[1, 0, 0, length / 2], [0, 1, 0, -width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
+        front_top_left = np.array(
+            [[1, 0, 0, length / 2], [0, 1, 0, -width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
 
 
-                back_top_right = np.array(
-                    [[1, 0, 0, -length / 2], [0, 1, 0, width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
+        back_top_right = np.array(
+            [[1, 0, 0, -length / 2], [0, 1, 0, width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
 
-                back_top_left = np.array(
-                    [[1, 0, 0, -length / 2], [0, 1, 0, -width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
+        back_top_left = np.array(
+            [[1, 0, 0, -length / 2], [0, 1, 0, -width / 2], [0, 0, 1, height / 2], [0, 0, 0, 1]])
 
-                # Project to lidar
-                f_t_r =  np.matmul(T_Lidar_Cuboid, front_top_right)
-                f_t_l  = np.matmul(T_Lidar_Cuboid, front_top_left)
-                b_t_r  = np.matmul(T_Lidar_Cuboid, back_top_right)
-                b_t_l = np.matmul(T_Lidar_Cuboid, back_top_left)
+        # Project to lidar
+        f_t_r =  np.matmul(T_Lidar_Cuboid, front_top_right)
+        f_t_l  = np.matmul(T_Lidar_Cuboid, front_top_left)
+        b_t_r  = np.matmul(T_Lidar_Cuboid, back_top_right)
+        b_t_l = np.matmul(T_Lidar_Cuboid, back_top_left)
 
-                x_1.append(f_t_r[0][3])
-                y_1.append(f_t_r[1][3])
+        x_1.append(f_t_r[0][3])
+        y_1.append(f_t_r[1][3])
 
-                x_2.append(f_t_l[0][3])
-                y_2.append(f_t_l[1][3])
+        x_2.append(f_t_l[0][3])
+        y_2.append(f_t_l[1][3])
 
-                x_3.append(b_t_r[0][3])
-                y_3.append(b_t_r[1][3])
+        x_3.append(b_t_r[0][3])
+        y_3.append(b_t_r[1][3])
 
-                x_4.append(b_t_l[0][3])
-                y_4.append(b_t_l[1][3])
+        x_4.append(b_t_l[0][3])
+        y_4.append(b_t_l[1][3])
 
     # to use for the plot
-
     x_img_tracklets = [i * -1 for i in y_trunc] # the negative lidar y axis is the positive img x axis
     y_img_tracklets = x_trunc                   # the lidar x axis is the img y axis
 
@@ -216,13 +217,13 @@ def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front
     for i in range(len(x_img_1)):
         poly = np.array([[x_img_1[i], y_img_1[i]], [x_img_2[i], y_img_2[i]],
                          [x_img_4[i], y_img_4[i]], [x_img_3[i], y_img_3[i]]])
-        polys = patches.Polygon(poly, closed=True, fill=False, edgecolor=colors[i], linewidth=1)
+        polys = patches.Polygon(poly, closed=True, fill=False, edgecolor=colors[i], linewidth=2*linesize)
         ax.add_patch(polys)
 
         if plot_center:
-            ax.scatter(x_img_tracklets, y_img_tracklets, marker ='o', color=colors[i], linewidths=1)
+            ax.scatter(x_img_tracklets, y_img_tracklets, marker ='o', color=colors[i], linewidths=2*linesize)
 
-    ax.scatter(x_img, y_img, s=1, c=pixel_values, alpha=1.0, cmap=cmap)
+    ax.scatter(x_img, y_img, s=linesize, c=pixel_values, alpha=1.0, cmap=cmap)
 
     ax.set_facecolor((0, 0, 0)) # black background
     ax.axis('scaled')           # {equal, scaled}
@@ -248,5 +249,5 @@ if __name__ == '__main__':
 
     image, title = bev(date='2019_02_27', sequence='0010', frame=26)
 
-    img = Image.fromarray(image, 'RGB')
-    img.show()
+    image = Image.fromarray(image, 'RGB')
+    image.show()
