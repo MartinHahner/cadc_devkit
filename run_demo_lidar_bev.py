@@ -1,5 +1,6 @@
 import json
 import socket
+import operator
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,9 +23,9 @@ DISPLAY_CUBOID_CENTER = False
 MIN_CUBOID_DIST = 40.0
 
 
-def bev(date: str, sequence: str, frame: int, left: int=60, right: int=60, front: int=40, back: int=40, linesize: int=5,
-        base_dir: str=None, dpi: int=20, plot_center: bool=False, plot_partly: bool=False, use_intensity: bool=False) \
-        -> Tuple[plt.Figure, str]:
+def bev(date: str, sequence: str, frame: int, left: int=60, right: int=60, front: int=40, back: int=40,
+        linewidth: int=20, pointsize: int=50, dpi: int=20, base_dir: str=None, plot_center: bool=False,
+        plot_partly: bool=False, use_intensity: bool=False) -> Tuple[np.ndarray, str]:
 
     if base_dir:
 
@@ -217,18 +218,23 @@ def bev(date: str, sequence: str, frame: int, left: int=60, right: int=60, front
     for i in range(len(x_img_1)):
         poly = np.array([[x_img_1[i], y_img_1[i]], [x_img_2[i], y_img_2[i]],
                          [x_img_4[i], y_img_4[i]], [x_img_3[i], y_img_3[i]]])
-        polys = patches.Polygon(poly, closed=True, fill=False, edgecolor=colors[i], linewidth=2*linesize)
+        polys = patches.Polygon(poly, closed=True, fill=False, edgecolor=colors[i], linewidth=linewidth)
         ax.add_patch(polys)
 
         if plot_center:
-            ax.scatter(x_img_tracklets, y_img_tracklets, marker ='o', color=colors[i], linewidths=2*linesize)
+            ax.scatter(x_img_tracklets, y_img_tracklets, marker ='o', color=colors[i], linewidths=linewidth)
 
-    ax.scatter(x_img, y_img, s=linesize, c=pixel_values, alpha=1.0, cmap=cmap)
-
-    ax.set_facecolor((0, 0, 0)) # black background
+    ax.scatter(x_img, y_img, s=pointsize, c=pixel_values, alpha=1.0, cmap=cmap)
     ax.axis('scaled')           # {equal, scaled}
     ax.xaxis.set_visible(False) # do not draw axis tick marks
     ax.yaxis.set_visible(False) # do not draw axis tick marks
+
+    plt.gca().set_axis_off()
+    plt.subplots_adjust(top=1, bottom=0, right=1, left=0,
+                        hspace=0, wspace=0)
+    plt.margins(0, 0)
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
     plt.xlim([0, x_max])
     plt.ylim([0, y_max])
