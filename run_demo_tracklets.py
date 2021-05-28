@@ -172,20 +172,20 @@ def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: s
     # draw 12 individual lines
 
     # front
-    cv2.line(img, f_b_r_crd, f_t_r_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_b_r_crd, f_b_l_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_b_l_crd, f_t_l_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_t_l_crd, f_t_r_crd, GREEN, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_b_r_crd, f_t_r_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_b_r_crd, f_b_l_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_b_l_crd, f_t_l_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_t_l_crd, f_t_r_crd, color, thickness=2, lineType=8, shift=0)
     # back
-    cv2.line(img, b_b_r_crd, b_t_r_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, b_b_r_crd, b_b_l_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, b_b_l_crd, b_t_l_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, b_t_l_crd, b_t_r_crd, GREEN, thickness=2, lineType=8, shift=0)
+    cv2.line(img, b_b_r_crd, b_t_r_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, b_b_r_crd, b_b_l_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, b_b_l_crd, b_t_l_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, b_t_l_crd, b_t_r_crd, color, thickness=2, lineType=8, shift=0)
     # connect front to back
-    cv2.line(img, f_b_r_crd, b_b_r_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_t_r_crd, b_t_r_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_b_l_crd, b_b_l_crd, GREEN, thickness=2, lineType=8, shift=0)
-    cv2.line(img, f_t_l_crd, b_t_l_crd, GREEN, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_b_r_crd, b_b_r_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_t_r_crd, b_t_r_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_b_l_crd, b_b_l_crd, color, thickness=2, lineType=8, shift=0)
+    cv2.line(img, f_t_l_crd, b_t_l_crd, color, thickness=2, lineType=8, shift=0)
 
   relative_path = '/'.join(image_path.split('/')[-6:])
 
