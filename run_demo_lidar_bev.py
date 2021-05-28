@@ -22,7 +22,7 @@ DISPLAY_CUBOID_CENTER = False
 MIN_CUBOID_DIST = 40.0
 
 
-def bev(date: str, sequence: str, frame: int, left: int, right: int, front: int, back: int,
+def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front: int=50, back: int=50,
         base_dir: str=None, dpi: int=25, plot_center: bool=False, use_intensity: bool=False) -> Tuple[plt.Figure, str]:
 
     if base_dir:
@@ -246,7 +246,7 @@ def bev(date: str, sequence: str, frame: int, left: int, right: int, front: int,
 
 if __name__ == '__main__':
 
-    image, title = bev(date='2019_02_27', sequence='0010', frame=26, left=50, right=50, front=50, back=50)
+    image, title = bev(date='2019_02_27', sequence='0010', frame=26)
 
     img = Image.fromarray(image, 'RGB')
     img.show()
