@@ -1,6 +1,5 @@
 import json
 import socket
-import operator
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,7 +22,7 @@ DISPLAY_CUBOID_CENTER = False
 MIN_CUBOID_DIST = 40.0
 
 
-def bev(date: str, sequence: str, frame: int, left: int=60, right: int=60, front: int=40, back: int=40,
+def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front: int=50, back: int=50,
         linewidth: int=20, pointsize: int=50, dpi: int=20, base_dir: str=None, plot_center: bool=False,
         plot_partly: bool=False, use_intensity: bool=False) -> Tuple[np.ndarray, str]:
 
