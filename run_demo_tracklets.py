@@ -12,8 +12,8 @@ from scipy.spatial.transform import Rotation as R
 RED, GREEN, BLUE, YELLOW = [255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0]
 
 COLORMAP = {'Car': GREEN,
-            'Cyclist': RED,
-            'Pedestrian': YELLOW}
+            'Cyclist': YELLOW,
+            'Pedestrian': RED}
 
 
 def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: str=None,

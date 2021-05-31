@@ -13,8 +13,8 @@ from scipy.spatial.transform import Rotation as R
 RED, GREEN, BLUE, YELLOW = [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 0]
 
 COLORMAP = {'Car': GREEN,
-            'Cyclist': RED,
-            'Pedestrian': YELLOW}
+            'Cyclist': YELLOW,
+            'Pedestrian': RED}
 
 MOVE_FORWARD = True
 DISPLAY_LIDAR = False
