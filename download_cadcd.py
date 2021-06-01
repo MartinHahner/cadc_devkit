@@ -24,10 +24,10 @@ cadcd = {
     ]
 }
 
-dataset_path='/scratch_net/beast_second/mhahner/datasets'
+dataset_path='/srv/beegfs-benderdata/scratch/trace_martin/data/temp'
 os.chdir(dataset_path)
 
-labeled = False
+labeled = True
 
 if labeled:
     print('Downloading labeled data')
