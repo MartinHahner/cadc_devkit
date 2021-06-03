@@ -203,7 +203,7 @@ if __name__ == '__main__':
 
     for cam_id in range(8):
 
-        image, title = vis_gt_on_cam(date='2019_02_27', sequence='0010', camera=str(cam_id), frame=26,
+        image, title = vis_gt_on_cam(date='2019_02_27', sequence='0043', camera=str(cam_id), frame=0,
                                      plot_center=False, plot_partly=True)
 
         plt.title(title)

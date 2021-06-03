@@ -23,7 +23,7 @@ MIN_CUBOID_DIST = 40.0
 
 
 def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front: int=50, back: int=50,
-        linewidth: int=20, pointsize: int=50, dpi: int=20, base_dir: str=None, plot_center: bool=False,
+        linewidth: int=20, pointsize: int=50, dpi: int=10, base_dir: str=None, plot_center: bool=False,
         plot_partly: bool=False, use_intensity: bool=False) -> Tuple[np.ndarray, str]:
 
     if base_dir:
@@ -252,7 +252,7 @@ def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front
 
 if __name__ == '__main__':
 
-    image, title = bev(date='2019_02_27', sequence='0010', frame=26)
+    image, title = bev(date='2019_02_27', sequence='0043', frame=0)
 
     image = Image.fromarray(image, 'RGB')
     image.show()

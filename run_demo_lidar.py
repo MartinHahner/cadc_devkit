@@ -1,54 +1,100 @@
-#!/usr/bin/env python
+import sys
+
+import cv2
+import socket
 
 import numpy as np
-import cv2
-import load_calibration
+import matplotlib.pyplot as plt
+
+from PIL import Image
+from pathlib import Path
 from lidar_utils import lidar_utils
+from load_calibration import load_calibration
 
-frame = 90
-cam = '0'
-seq = '0027'
-DISTORTED = False
-MOVE_FORWARD = True
-BASE = "/media/matthew/WAVELAB_2TB/winter/"
 
-if DISTORTED:
-  path_type = 'raw'
-else:
-  path_type = 'processed'
+def lidar(date: str, sequence: str, camera: str, frame: int, base_dir: str=None, move_forward: bool=False) -> None:
 
-lidar_path = BASE + "data/" + seq + "/" + path_type + "/lidar_points/data/" + format(frame, '010') + ".bin";
-calib_path = BASE + "calib/";
-img_path = BASE + "data/" + seq + "/" + path_type + "/image_0" + cam + "/data/" + format(frame, '010') + ".png";
+    if base_dir:
+  
+        BASE = Path(base_dir)
+  
+    else:
+  
+        hostname = socket.gethostname()
+    
+        if hostname == 'beast':
+    
+            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
+    
+        else:
+    
+            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
 
-# load calibration dictionary
-calib = load_calibration.load_calibration(calib_path);
+    path_type = 'labeled'
+    distorted = path_type == 'raw'
 
-# Projection matrix from camera to image frame
-T_IMG_CAM = np.eye(4);
-T_IMG_CAM[0:3,0:3] = np.array(calib['CAM0' + cam]['camera_matrix']['data']).reshape(-1, 3);
-T_IMG_CAM = T_IMG_CAM[0:3,0:4]; # remove last row
+    assert path_type in ['labeled', 'raw'], f'unknown path_type "{path_type}"'
 
-T_CAM_LIDAR = np.linalg.inv(np.array(calib['extrinsics']['T_LIDAR_CAM0' + cam]));
+    image_path = str(BASE / date / sequence / path_type / f"image_0{camera}" / "data" / f"{format(frame, '010')}.png")
+    lidar_path = str(BASE / date / sequence / path_type / "lidar_points" / "data" / f"{format(frame, '010')}.bin")
+    calib_path = str(BASE / date / "calib")
 
-dist_coeffs = np.array(calib['CAM0' + cam]['distortion_coefficients']['data'])
+    # load calibration dictionary
+    calib = load_calibration(calib_path)
+  
+    # Projection matrix from camera to image frame
+    t_img_cam = np.eye(4)
+    t_img_cam[0:3, 0:3] = np.array(calib['CAM0' + camera]['camera_matrix']['data']).reshape(-1, 3)
+    t_img_cam = t_img_cam[0:3, 0:4] # remove last row
+  
+    t_cam_lidar = np.linalg.inv(np.array(calib['extrinsics']['T_LIDAR_CAM0' + camera]))
+  
+    dist_coeffs = np.array(calib['CAM0' + camera]['distortion_coefficients']['data'])
 
-lidar_utils_obj = lidar_utils(T_CAM_LIDAR);
+    lidar_utils_obj = lidar_utils(t_cam_lidar)
 
-while True:
-  print(frame)
-  # read image
-  img = cv2.imread(img_path)
+    while True:
 
-  # Project points onto image
-  img = lidar_utils_obj.project_points(img, lidar_path, T_IMG_CAM, T_CAM_LIDAR, dist_coeffs, DISTORTED);
-  # cv2.imwrite("test.png", img)
+        try:
 
-  cv2.imshow('image',img)
-  cv2.waitKey(1000)
+            print(f'{date} - {sequence} - {frame}')
 
-  if MOVE_FORWARD:
-    frame += 1;
-    lidar_path = BASE + "data/" + seq + "/" + path_type + "/lidar_points/data/" + format(frame, '010') + ".bin"
-    img_path = BASE + "data/" + seq + "/" + path_type + "/image_0" + cam + "/data/" + format(frame, '010') + ".png"
-    img = cv2.imread(img_path)
+            # read image
+            img = cv2.imread(image_path)
+
+            # BGR to RGB
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            # Project points onto image
+            img = lidar_utils_obj.project_points(img, lidar_path, t_img_cam, t_cam_lidar, dist_coeffs, distorted)
+            # cv2.imwrite("test.png", img)
+
+            image = Image.fromarray(img, 'RGB')
+
+            plt.imshow(image)
+            plt.xticks([]), plt.yticks([])  # to hide tick values on x and y axis
+            plt.show()
+            plt.clf()                       # will make the plot window empty
+            plt.close()
+
+            if move_forward:
+
+                frame += 1
+
+                image_path = str(BASE / date / sequence / path_type / f"image_0{camera}" / "data" /
+                                 f"{format(frame, '010')}.png")
+                lidar_path = str(BASE / date / sequence / path_type / "lidar_points" / "data" /
+                                 f"{format(frame, '010')}.bin")
+
+                img = cv2.imread(image_path)
+
+        except FileNotFoundError:
+
+            print('end of sequence reached')
+            sys.exit(0)
+
+
+
+if __name__ == '__main__':
+
+    lidar(date='2019_02_27', sequence='0043', camera='0', frame=0, move_forward = True)

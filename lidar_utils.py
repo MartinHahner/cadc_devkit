@@ -8,7 +8,6 @@ class lidar_utils:
     def __init__(self, t_cam_lidar):
 
         self.t_cam_lidar = t_cam_lidar
-        print("init lidar utils")
 
 
     def project_points(self, img, lidar_path, t_img_cam, t_cam_lidar, dist_coeffs, distorted):
