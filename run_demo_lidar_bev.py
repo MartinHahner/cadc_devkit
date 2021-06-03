@@ -36,15 +36,15 @@ def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front
 
         if hostname == 'beast':
 
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD/{date}')
+            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
 
         else:
 
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD/{date}')
+            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
 
-    lidar_path = str(BASE / sequence / "labeled" / "lidar_points" / "data" / f"{format(frame, '010')}.bin")
+    lidar_path = str(BASE / date / sequence / "labeled" / "lidar_points" / "data" / f"{format(frame, '010')}.bin")
 
-    annotations_file = BASE / sequence / "3d_ann.json"
+    annotations_file = BASE / date / sequence / "3d_ann.json"
 
     #limit the viewing range
     side_range = [-left, right]

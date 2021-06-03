@@ -30,16 +30,16 @@ def vis_gt_on_cam(date: str, sequence: str, camera: str, frame: int, base_dir: s
 
         if hostname == 'beast':
 
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD/{date}')
+            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
 
         else:
 
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD/{date}')
+            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
 
-    image_path = str(BASE / sequence / "labeled" / f"image_0{camera}" / "data" / f"{format(frame, '010')}.png")
-    calib_path = str(BASE / "calib")
+    image_path = str(BASE / date / sequence / "labeled" / f"image_0{camera}" / "data" / f"{format(frame, '010')}.png")
+    calib_path = str(BASE / date / "calib")
 
-    annotations_file = BASE / sequence / "3d_ann.json"
+    annotations_file = BASE / date / sequence / "3d_ann.json"
 
     # Load 3d annotations
     with open(annotations_file) as f:
