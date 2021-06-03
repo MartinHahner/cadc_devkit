@@ -1,13 +1,15 @@
 import os
 
-def load_novatel_data(novatel_path):
+from pathlib import Path
 
-  files = os.listdir(novatel_path)
-  novatel = []
+def load_novatel_data(novatel_path: Path):
 
-  for file in sorted(files):
+    files = os.listdir(novatel_path)
+    novatel = []
 
-    with open(novatel_path + file) as fp:
-      novatel.append(fp.readline().split(' '))
+    for file in sorted(files):
 
-  return novatel
+        with open(novatel_path / file) as fp:
+            novatel.append(fp.readline().split(' '))
+
+    return novatel
