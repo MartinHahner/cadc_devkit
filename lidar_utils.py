@@ -5,15 +5,15 @@ import numpy as np
 
 class lidar_utils:
 
-    def __init__(self, T_CAM_LIDAR):
+    def __init__(self, t_cam_lidar):
 
-        self.T_CAM_LIDAR = T_CAM_LIDAR
+        self.t_cam_lidar = t_cam_lidar
         print("init lidar utils")
 
 
-    def project_points(self, img, lidar_path, T_IMG_CAM, T_CAM_LIDAR, dist_coeffs, DISTORTED):
+    def project_points(self, img, lidar_path, t_img_cam, t_cam_lidar, dist_coeffs, distorted):
 
-        self.T_CAM_LIDAR = T_CAM_LIDAR
+        self.t_cam_lidar = t_cam_lidar
 
         scan_data = np.fromfile(lidar_path, dtype=np.float32)
 
@@ -25,7 +25,7 @@ class lidar_utils:
 
         projected_points = []
 
-        [rows, cols] = lidar.shape
+        rows = lidar.shape[0]
         # print(lidar[0,:])
         # print(lidar[1,:])
         # print(lidar[1,0:3])
@@ -35,7 +35,7 @@ class lidar_utils:
             p = np.array([0.0, 0.0, 0.0, 1.0])
             p[0:3] = lidar[i,0:3]
             # print("p",p)
-            projected_p =  np.matmul(self.T_CAM_LIDAR, p.transpose())
+            projected_p =  np.matmul(self.t_cam_lidar, p.transpose())
             if projected_p[2] < 2: # arbitrary cut off
                 continue
             projected_points.append([projected_p[0], projected_p[1], projected_p[2]])
@@ -44,13 +44,13 @@ class lidar_utils:
 
         # Send [x, y, z] and Transform
         projected_points_np = np.array(projected_points)
-        image_points = self.project(projected_points_np, T_IMG_CAM, dist_coeffs, DISTORTED)
+        image_points = project(projected_points_np, t_img_cam, dist_coeffs, distorted)
         # print("image_points")
         # print(image_points)
 
         radius = 0
 
-        [rows, cols] = projected_points_np.shape
+        rows = projected_points_np.shape[0]
 
         NUM_COLOURS = 7
         rainbow = [
@@ -78,30 +78,30 @@ class lidar_utils:
         return img
 
 
-    def project(self, p_in, T_IMG_CAM, dist_coeffs, DISTORTED):
+def project(p_in, t_img_cam, dist_coeffs, distorted):
 
-        p_out = []
-        [rows, cols] = p_in.shape
+    p_out = []
+    rows = p_in.shape[0]
 
-        for i in range(rows):
-            # print("p_in[i]", p_in[i])
-            point = np.array([0.0, 0.0, 0.0, 1.0])
-            # print("p_in[i][0]",p_in[i][0])
-            point[0:3] = p_in[i]
-            # print("p[0]",p[0])
-            if DISTORTED:
-                rvec = tvec = np.zeros(3)
-                # print(p[0:3])
-                # print(T_IMG_CAM[0:3,0:3])
-                # print(np.array(calib['CAM02']['distortion_coefficients']['data']))
-                image_points, jac = cv2.projectPoints(np.array([point[0:3]]), rvec, tvec, T_IMG_CAM[0:3,0:3], dist_coeffs)
-                p_out.append([image_points[0,0,0], image_points[0,0,1]])
-                # print("image_points", image_points[0,0])
-            else:
-                curr = np.matmul(T_IMG_CAM, point.transpose()).transpose()
-                # print("curr",curr)
-                done = [curr[0] / curr[2], curr[1] / curr[2]]
-                p_out.append(done)
-                # print("p_out append", done)
+    for i in range(rows):
+        # print("p_in[i]", p_in[i])
+        point = np.array([0.0, 0.0, 0.0, 1.0])
+        # print("p_in[i][0]",p_in[i][0])
+        point[0:3] = p_in[i]
+        # print("p[0]",p[0])
+        if distorted:
+            rvec = tvec = np.zeros(3)
+            # print(p[0:3])
+            # print(t_img_cam[0:3,0:3])
+            # print(np.array(calib['CAM02']['distortion_coefficients']['data']))
+            image_points, jac = cv2.projectPoints(np.array([point[0:3]]), rvec, tvec, t_img_cam[0:3,0:3], dist_coeffs)
+            p_out.append([image_points[0,0,0], image_points[0,0,1]])
+            # print("image_points", image_points[0,0])
+        else:
+            curr = np.matmul(t_img_cam, point.transpose()).transpose()
+            # print("curr",curr)
+            done = [curr[0] / curr[2], curr[1] / curr[2]]
+            p_out.append(done)
+            # print("p_out append", done)
 
-        return p_out
+    return p_out
