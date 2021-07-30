@@ -106,7 +106,7 @@ BASE = '/media/matthew/WAVELAB_2TB/winter/data/'
 LOOP = False
 
 # for frame in range(21, 83):
-print_snow_points(68)
+# print_snow_points(68)
 # Low 74
 # Medium 81
 # High 80
