@@ -1,5 +1,4 @@
 import json
-import socket
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,20 +26,9 @@ def bev(date: str, sequence: str, frame: int, left: int=50, right: int=50, front
         plot_partly: bool=False, use_intensity: bool=False) -> Tuple[np.ndarray, str]:
 
     if base_dir:
-
         BASE = Path(base_dir)
-
     else:
-
-        hostname = socket.gethostname()
-
-        if hostname == 'beast':
-
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
-
-        else:
-
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
+        BASE = Path.home() / 'datasets' / 'CADCD'
 
     lidar_path = str(BASE / date / sequence / "labeled" / "lidar_points" / "data" / f"{format(frame, '010')}.bin")
 

@@ -1,7 +1,5 @@
 import sys
-
 import cv2
-import socket
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,20 +13,9 @@ from load_calibration import load_calibration
 def lidar(date: str, sequence: str, camera: str, frame: int, base_dir: str=None, move_forward: bool=False) -> None:
 
     if base_dir:
-  
         BASE = Path(base_dir)
-  
     else:
-  
-        hostname = socket.gethostname()
-    
-        if hostname == 'beast':
-    
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
-    
-        else:
-    
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
+        BASE = Path.home() / 'datasets' / 'CADCD'
 
     path_type = 'labeled'
     distorted = path_type == 'raw'

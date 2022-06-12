@@ -1,5 +1,3 @@
-import socket
-
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -13,20 +11,9 @@ import load_novatel_data, convert_novatel_to_pose
 def show_path(date: str, sequence: str, base_dir: str=None) -> None:
 
     if base_dir:
-
         BASE = Path(base_dir)
-
     else:
-
-        hostname = socket.gethostname()
-
-        if hostname == 'beast':
-
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
-
-        else:
-
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
+        BASE = Path.home() / 'datasets' / 'CADCD'
 
     novatel_path = BASE / date / sequence / 'labeled' / 'novatel' / 'data'
 

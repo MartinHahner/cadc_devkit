@@ -1,6 +1,5 @@
 import cv2
 import json
-import socket
 
 import numpy as np
 
@@ -16,20 +15,9 @@ MOVE_FORWARD = True
 def vis_gt_on_cam_2d(date: str, sequence: str, camera: str, frame: int, base_dir: str = None) -> Tuple[np.ndarray, str]:
 
     if base_dir:
-
         BASE = Path(base_dir)
-
     else:
-
-        hostname = socket.gethostname()
-
-        if hostname == 'beast':
-
-            BASE = Path(f'/scratch_net/beast_second/mhahner/datasets/CADCD')
-
-        else:
-
-            BASE = Path(f'/srv/beegfs02/scratch/tracezuerich/data/datasets/CADCD')
+        BASE = Path.home() / 'datasets' / 'CADCD'
 
     image_path = str(BASE / date / sequence / "labeled" / f"image_0{camera}" / "data" / f"{format(frame, '010')}.png")
     calib_path = str(BASE / date / "calib")

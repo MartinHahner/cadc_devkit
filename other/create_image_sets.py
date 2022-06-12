@@ -3,7 +3,6 @@ __contact__ = "martin.hahner@pm.me"
 __license__ = "CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)"
 
 import pickle
-import socket
 import numpy as np
 from tqdm import tqdm
 from os import listdir
@@ -17,10 +16,7 @@ from matplotlib import pyplot as plt
 DROR_LEVELS = {'none':    ( 0,   9),
                'light':   (10,  79)}
 
-if socket.gethostname() == 'beast':
-    DROR = Path('/scratch_net/beast_second/mhahner/datasets/DENSE/SeeingThroughFog/DROR')
-else:
-    DROR = Path().home() / 'datasets' / 'DENSE/SeeingThroughFog/DROR'
+DROR = Path(__file__).parent.parent.parent.parent.absolute()
 
 
 
