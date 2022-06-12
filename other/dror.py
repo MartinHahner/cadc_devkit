@@ -4,7 +4,6 @@ __license__ = "CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)"
 
 import os
 import pcl
-import socket
 import pickle
 import logging
 import argparse
@@ -16,14 +15,8 @@ from pathlib import Path
 from datetime import datetime
 
 
-if socket.gethostname() == 'beast':
-    DROR = Path('/scratch_net/beast_second/mhahner/datasets/DENSE/SeeingThroughFog/DROR')
-    CADC_ROOT = Path('/scratch_net/beast_second/mhahner/datasets/CADCD')
-    DENSE_ROOT = Path('/scratch_net/beast_second/mhahner/datasets/DENSE/SeeingThroughFog')
-else:
-    DROR = Path().home() / 'datasets' / 'DENSE/SeeingThroughFog/DROR'
-    CADC_ROOT = Path().home() / 'datasets' / 'CADCD'
-    DENSE_ROOT = Path().home() / 'datasets' / 'DENSE' / 'SeeingThroughFog'
+CADC_ROOT = Path().home() / 'datasets' / 'CADCD'
+DENSE_ROOT = Path().home() / 'datasets' / 'DENSE' / 'SeeingThroughFog'
 
 
 def parse_args() -> argparse.Namespace:
@@ -221,7 +214,7 @@ def process_dense(args: argparse.Namespace):
         infos = pickle.load(i)
         dense_infos.extend(infos)
 
-    save_folder = Path.home() / 'datasets/DENSE/SeeingThroughFog/DROR' / alpha / split / sensor / signal / variant
+    save_folder = Path.home() / 'Downloads' / 'DROR' / alpha / split / sensor / signal / variant
     save_folder.mkdir(parents=True, exist_ok=True)
 
     pbar = tqdm(range(len(dense_infos)), desc='_'.join(str(save_folder).split('/')[-4:]))
