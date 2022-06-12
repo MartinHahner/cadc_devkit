@@ -1,3 +1,7 @@
+__author__ = "Martin Hahner"
+__contact__ = "martin.hahner@pm.me"
+__license__ = "CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/)"
+
 import os
 import pcl
 import socket
@@ -170,10 +174,10 @@ def process_cadc(args: argparse.Namespace):
                                          'snow': f'{int(n_snow)}'})
 
             log.info(f'{date}/{sequence}   1st_snow: {int(first_n_snow):>4}, '
-                                         f'min_snow: {int(min_n_snow):>4}, '  
+                                         f'min_snow: {int(min_n_snow):>4}, '
                                          f'avg_snow: {int(avg_n_snow):>4}, '
                                          f'max_snow: {int(max_n_snow):>4}, '
-                                         f'min_cube: {int(min_n_cube):>4}, '  
+                                         f'min_cube: {int(min_n_cube):>4}, '
                                          f'avg_cube: {int(avg_n_cube):>4}, '
                                          f'max_cube: {int(max_n_cube):>4}')
 
